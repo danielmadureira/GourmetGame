@@ -21,9 +21,7 @@ class CLIUserInterface {
    * @returns { Promise<void> }
    */
   async alert(message) {
-    this._input(message)
-
-    await this._getInput()
+    await this._getInput(message, '(Pressione enter)')
   }
 
   /**
@@ -35,9 +33,15 @@ class CLIUserInterface {
    * @returns { Promise<Boolean> } Resposta do usuário.
    */
   async confirm(message) {
-    this._input(message, '(s/*)> ')
+    let userResponse
+    let loop = true
+    do {
+       userResponse = await this._getInput(message, '(s/n)> ')
 
-    let userResponse = await this._getInput()
+       if (userResponse === 's' || userResponse === 'n') {
+        loop = false
+       }
+    } while (loop)
 
     return (userResponse.toLowerCase() === "s")
   }
@@ -50,32 +54,25 @@ class CLIUserInterface {
    * @returns { Promise<String> } Resposta do usuário.
    */
   async prompt(message) {
-    this._input(message)
-
-    return await this._getInput()
+    return await this._getInput(message)
   }
 
   /**
    * Faz uma pergunta ao usuário.
    * 
    * @param { String } message Texto para exibir para o usuário.
-   * @param { String } promptText Texto que aparece antes do cursor.
-   */
-  _input(message, promptText = "> ") {
-    console.log(message)
-    this.RL.setPrompt(promptText)
-    this.RL.prompt()
-  }
-
-  /**
-   * Retorna o texto digitado pelo usuário.
+   * @param { String } promptSign Texto que aparece antes do cursor.
    * 
-   * @returns { String }
+   * @returns { Promise<string> }
    */
-  async _getInput() {
-    for await (let line of this.RL) {
-      return line
-    }
+  _getInput(message, promptSign = "> ") {
+    console.log(message)
+    this.RL.setPrompt(promptSign)
+    this.RL.prompt()
+
+    return new Promise(resolve => {
+      this.RL.once('line', resolve)
+    })
   }
 
 }

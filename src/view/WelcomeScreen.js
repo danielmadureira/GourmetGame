@@ -20,7 +20,7 @@ class WelcomeScreen extends AbstractView {
    * @returns { Boolean }
    */
   async render() {
-    return await this.ui.confirm("Pense em um prato que gosta.")
+    await this.ui.alert("Pense em um prato que gosta.")
   }
 
 }
