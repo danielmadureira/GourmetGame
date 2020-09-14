@@ -103,7 +103,7 @@ class AppController {
     const dishCat = new Dish(newDishCatName)
     dishCat.addDish(new Dish(newDishName))
 
-    dishSet.unshift(dishCat)
+    dishSet.splice(-1, 0, dishCat)
   }
 
   /**
