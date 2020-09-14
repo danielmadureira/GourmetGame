@@ -4,6 +4,7 @@ const SuccessScreen = require("../view/SuccessScreen")
 const CreateDishScreen = require("../view/CreateDishScreen")
 const CreateDishCategoryScreen = require("../view/CreateDishCategoryScreen")
 const Dish = require("../model/Dish")
+
 /**
  * Controlador da aplicação.
  */
@@ -44,25 +45,14 @@ class AppController {
    */
   async indexPage() {
     const view = new WelcomeScreen(this.DC.userInterface)
-    const userResponse = await view.render()
-
-    if (!userResponse) {
-      this.terminate()
-    }
-  }
-
-  /**
-   * Encerra a execução do app.
-   */
-  terminate() {
-    process.exit(0)
+    await view.render()
   }
 
   /**
    * Carrega a tela para tentar adivinhar
    * o prato do usuário.
    * 
-   * @param { Set } dishSet 
+   * @param { Array } dishSet 
    * 
    * @returns { Array }
    */
@@ -100,20 +90,20 @@ class AppController {
   /**
    * Carrega as telas para cadastrar um novo prato.
    * 
-   * @param { Set } dishSet 
+   * @param { Array } dishSet 
    */
   async createNewDish(dishSet) {
     const newDishName = await this._enterNewDish()
 
     // First item in the set.
-    const lastItemInSet = [ ...dishSet ].pop()
+    const lastItemInSet = dishSet[dishSet.length - 1]
 
     const newDishCatName = await this._enterNewDishCat(newDishName, lastItemInSet.name)
 
     const dishCat = new Dish(newDishCatName)
     dishCat.addDish(new Dish(newDishName))
 
-    dishSet.add(dishCat)
+    dishSet.unshift(dishCat)
   }
 
   /**

@@ -11,7 +11,7 @@ class Dish {
    */
   constructor(name) {
     this.name = name
-    this.dishes = new Set()
+    this.dishes = [ ]
   }
 
   /**
@@ -20,7 +20,7 @@ class Dish {
    * @param { Dish } dish
    */
   addDish(dish) {
-    this.dishes.add(dish)
+    this.dishes.push(dish)
   }
 
   /**
@@ -29,7 +29,7 @@ class Dish {
    * @returns { Boolean }
    */
   hasDishes() {
-    return (this.dishes.size > 0)
+    return (this.dishes.length > 0)
   }
 
 }
